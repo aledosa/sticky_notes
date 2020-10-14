@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AddCircleOutlineIcon,
   colors,
@@ -20,6 +21,27 @@ import { notesList, newNoteData } from "../atoms/DummyData";
 
 export const HomeScreen: React.FC = () => {
   const [newNote, updateNewNote] = useState(notesList);
+  const [post, updatePost] = useState([]);
+  // const isComponentUnmounted = useRef(false);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const postList = await fetch("/posts").then((res) => res.json());
+        // if (!isComponentUnmounted.current) {
+        updatePost(postList);
+        // }
+      } catch (err) {
+        // if (!isComponentUnmounted.current) {
+        console.log({ err: "error" });
+        // }
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
+  console.log(post);
 
   const handleClickAddNote = () => {
     updateNewNote([...newNote, newNoteData]);

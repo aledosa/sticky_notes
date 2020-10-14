@@ -18,18 +18,19 @@ import {
 } from "@the-ksquare-group/zanma-react-components";
 import { NoteComponent } from "../molecules/NoteComponent";
 import { notesList, newNoteData } from "../atoms/DummyData";
+import { IPostList } from "../entities/PostList";
 
 export const HomeScreen: React.FC = () => {
   const [newNote, updateNewNote] = useState(notesList);
-  const [post, updatePost] = useState([]);
+  const [posts, updatePosts] = useState<IPostList[]>([]);
   // const isComponentUnmounted = useRef(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const postList = await fetch("/posts").then((res) => res.json());
+        const postListData = await fetch("/posts").then((res) => res.json());
         // if (!isComponentUnmounted.current) {
-        updatePost(postList);
+        updatePosts(postListData);
         // }
       } catch (err) {
         // if (!isComponentUnmounted.current) {
@@ -41,7 +42,7 @@ export const HomeScreen: React.FC = () => {
     fetchPosts();
   }, []);
 
-  console.log(post);
+  console.log(posts);
 
   const handleClickAddNote = () => {
     updateNewNote([...newNote, newNoteData]);
@@ -129,7 +130,7 @@ export const HomeScreen: React.FC = () => {
                 }
               `}
             >
-              {newNote.map((note, index) => (
+              {posts.map((post, index) => (
                 <Column
                   className="card-column"
                   css="padding: 8px 0;"
@@ -141,7 +142,8 @@ export const HomeScreen: React.FC = () => {
                   <NoteComponent
                     id={`noteId-${index}`}
                     key={`noteKey-${index}`}
-                    name={`noteName-${index}`}
+                    name={`noteName-${post.title}`}
+                    value={post.description}
                   />
                 </Column>
               ))}

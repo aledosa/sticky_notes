@@ -10,14 +10,16 @@ interface INoteComponentProps {
   id?: string;
   name?: string;
   placeholder?: string;
+  value: string;
 }
 
 export const NoteComponent: React.FC<INoteComponentProps> = ({
   id = "noteComponent",
   name = "noteField",
   placeholder = "Insert text here",
+  value,
 }) => {
-  const [noteText, updateNoteText] = useState("");
+  const [noteText, updateNoteText] = useState(value);
 
   const handleChangeTextarea = ({
     target: { value },

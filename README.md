@@ -1,4 +1,4 @@
-# sticky_notes App
+# sticky_notes
 
 This app integrates a React js frontend and Express backend.
 

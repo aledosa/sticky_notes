@@ -1,6 +1,6 @@
 # Sticky Notes Application
 
-This app integrates a React js frontend and Express backend.
+This app integrates a React.js frontend and Express.js framework backend with a MongoDB database.
 
 For more details on technology stack used:
 

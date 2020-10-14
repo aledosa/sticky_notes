@@ -9,4 +9,5 @@ Frontend: React js, Typescript, styled components and a component library called
 Backend: Express, nodemon, Mongoose, body-parser, dotenv and MongoDB. Used NPM as a package manager.
 
 Regards,
+
 Alexa Dominguez

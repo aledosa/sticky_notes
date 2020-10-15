@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   Card,
+  ClickableElement,
+  CloseIcon,
   colors,
   DivFlex,
   TextareaElement,
@@ -14,6 +16,7 @@ interface INoteComponentProps {
   titlePlaceholder?: string;
   descriptionValue: string;
   titleValue: string;
+  onChangeNoteList: (noteId: string) => void;
 }
 
 export const NoteComponent: React.FC<INoteComponentProps> = ({
@@ -23,6 +26,7 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
   titlePlaceholder = "Write a title",
   descriptionValue,
   titleValue,
+  onChangeNoteList,
 }) => {
   const [noteTitle, updateNoteTitle] = useState(titleValue);
   const [noteDescription, updateNoteDescription] = useState(descriptionValue);
@@ -38,6 +42,10 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateNoteDescription(value);
+  };
+
+  const handleNoteDeleted = () => {
+    onChangeNoteList(id);
   };
 
   useEffect(() => {
@@ -86,6 +94,7 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
               75
             )};
             border: 1px solid transparent;
+            border-radius: 4px 0 0 0;
             box-shadow: 0 3px 6px
               ${utils.addColorTransparency(colors.BLACK, 16)};
             font-weight: 700;
@@ -106,12 +115,37 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
           value={noteTitle}
           onChange={handleChangeTitle}
         />
+        <ClickableElement
+          css={`
+            align-items: center;
+            background-color: ${utils.addColorTransparency(colors.RED_200, 75)};
+            border: 1px solid transparent;
+            border-radius: 0 4px 0 0;
+            box-shadow: 0 3px 6px
+              ${utils.addColorTransparency(colors.BLACK, 16)};
+            display: flex;
+            justify-content: center;
+            width: 60px;
+            &:active,
+            &:focus {
+              border-color: transparent;
+              box-shadow: 0 3px 6px
+                ${utils.addColorTransparency(colors.BLACK, 30)};
+              outline: transparent;
+            }
+          `}
+          title="Delete note"
+          onClick={handleNoteDeleted}
+        >
+          <CloseIcon fill={colors.GRAY_500} />
+        </ClickableElement>
       </DivFlex>
 
       <DivFlex>
         <TextareaElement
           css={`
             border: 1px solid transparent;
+            border-radius: 0 0 4px 4px;
             box-shadow: 0 3px 6px
               ${utils.addColorTransparency(colors.BLACK, 16)};
             &::placeholder {

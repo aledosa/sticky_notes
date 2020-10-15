@@ -20,24 +20,24 @@ import { INoteList } from "../entities/PostList";
 
 export const HomeScreen: React.FC = () => {
   const [notes, updateNotes] = useState<INoteList[]>([]);
-  // const isComponentUnmounted = useRef(false);
+  const [isNoteDeleted, updateIsNoteDeleted] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchNoteList = async () => {
       try {
+        updateIsNoteDeleted(false);
         const postListData = await fetch("/posts").then((res) => res.json());
-        // if (!isComponentUnmounted.current) {
         updateNotes(postListData);
-        // }
+        if (isNoteDeleted) {
+          updateNotes(postListData);
+        }
       } catch (err) {
-        // if (!isComponentUnmounted.current) {
         console.log({ err: "error" });
-        // }
       }
     };
 
-    fetchPosts();
-  }, []);
+    fetchNoteList();
+  }, [isNoteDeleted]);
 
   const handleClickAddNote = () => {
     const post = {
@@ -62,6 +62,20 @@ export const HomeScreen: React.FC = () => {
     };
 
     sendPost();
+  };
+
+  const handleDeleteNote = async (noteId: string) => {
+    try {
+      await fetch(`/posts/${noteId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+      updateIsNoteDeleted(true);
+    } catch (err) {
+      console.log({ err: "error" });
+    }
   };
 
   const noteContentLgWidth = withParentColumns(12);
@@ -162,6 +176,7 @@ export const HomeScreen: React.FC = () => {
                     name={note.title}
                     descriptionValue={note.description}
                     titleValue={note.title}
+                    onChangeNoteList={handleDeleteNote}
                   />
                 </Column>
               ))}

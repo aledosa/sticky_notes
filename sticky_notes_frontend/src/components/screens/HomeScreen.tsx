@@ -81,7 +81,7 @@ export const HomeScreen: React.FC = () => {
             </DivFlex>
             <DivFlex alignContent="center" paddingBottom="24px">
               <H4 color={colors.GRAY_200} css="text-transform: none;">
-                To start writing and organizing your life click on the note
+                To start writing and organizing your life click on the left icon
                 below.
               </H4>
             </DivFlex>

@@ -5,7 +5,7 @@ import "./index.css";
 import { App } from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-console.log("VERSION: 0.1.2");
+console.log("VERSION: 0.1.5");
 
 ReactDOM.render(
   <BrowserRouter>

@@ -29,7 +29,7 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
   const [noteTitle, updateNoteTitle] = useState(titleValue);
   const [noteDescription, updateNoteDescription] = useState(descriptionValue);
   const [hasNoteChanged, updateHasNoteChanged] = useState(false);
-  const AUTOSAVE_INTERVAL = 3000;
+  const AUTOSAVE_INTERVAL = 2000;
 
   const handleChangeTitle = ({
     target: { value },
@@ -160,10 +160,9 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
               outline: transparent;
             }
           `}
-          title="Delete note"
           onClick={handleDeletedNote}
         >
-          <CloseIcon fill={colors.GRAY_500} />
+          <CloseIcon fill={colors.GRAY_500} title="Delete note" />
         </ClickableElement>
       </DivFlex>
 

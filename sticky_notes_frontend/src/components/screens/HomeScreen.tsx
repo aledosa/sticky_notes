@@ -1,4 +1,3 @@
-// import React, { useEffect, useRef, useState } from "react";
 import React, { useEffect, useState } from "react";
 import {
   AddCircleOutlineIcon,
@@ -12,24 +11,23 @@ import {
   mediaQueries,
   Row,
   SvgSizes,
-  TertiaryButton,
+  TertiaryButtonElement,
   withParentColumns,
   Wrapper,
 } from "@the-ksquare-group/zanma-react-components";
 import { NoteComponent } from "../molecules/NoteComponent";
-import { notesList, newNoteData } from "../atoms/DummyData";
+import { INoteList } from "../entities/PostList";
 
 export const HomeScreen: React.FC = () => {
-  const [newNote, updateNewNote] = useState(notesList);
-  const [post, updatePost] = useState([]);
+  const [notes, updateNotes] = useState<INoteList[]>([]);
   // const isComponentUnmounted = useRef(false);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const postList = await fetch("/posts").then((res) => res.json());
+        const postListData = await fetch("/posts").then((res) => res.json());
         // if (!isComponentUnmounted.current) {
-        updatePost(postList);
+        updateNotes(postListData);
         // }
       } catch (err) {
         // if (!isComponentUnmounted.current) {
@@ -41,10 +39,29 @@ export const HomeScreen: React.FC = () => {
     fetchPosts();
   }, []);
 
-  console.log(post);
-
   const handleClickAddNote = () => {
-    updateNewNote([...newNote, newNoteData]);
+    const post = {
+      title: "",
+      description: "",
+    };
+
+    const sendPost = async () => {
+      try {
+        const postListData = await fetch("/posts", {
+          method: "POST",
+          body: JSON.stringify(post),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => res.json());
+
+        updateNotes([...notes, postListData]);
+      } catch (err) {
+        console.log({ err: "error" });
+      }
+    };
+
+    sendPost();
   };
 
   const noteContentLgWidth = withParentColumns(12);
@@ -102,7 +119,7 @@ export const HomeScreen: React.FC = () => {
             md={noteContentMdWidth(1)}
             sm={noteContentSmWidth(4)}
           >
-            <TertiaryButton onClick={handleClickAddNote}>
+            <TertiaryButtonElement onClick={handleClickAddNote}>
               <DivFlex justifyContent="center">
                 <AddCircleOutlineIcon
                   fill={colors.BLUE_200}
@@ -110,7 +127,7 @@ export const HomeScreen: React.FC = () => {
                   title="Add note"
                 />
               </DivFlex>
-            </TertiaryButton>
+            </TertiaryButtonElement>
           </Column>
           <Column
             className="rightSide-column"
@@ -129,7 +146,7 @@ export const HomeScreen: React.FC = () => {
                 }
               `}
             >
-              {newNote.map((note, index) => (
+              {notes.map((note, index) => (
                 <Column
                   className="card-column"
                   css="padding: 8px 0;"
@@ -139,9 +156,10 @@ export const HomeScreen: React.FC = () => {
                   sm={noteContentSmWidth(4)}
                 >
                   <NoteComponent
-                    id={`noteId-${index}`}
+                    id={note._id}
                     key={`noteKey-${index}`}
-                    name={`noteName-${index}`}
+                    name={`noteName-${note.title}`}
+                    value={note.description}
                   />
                 </Column>
               ))}

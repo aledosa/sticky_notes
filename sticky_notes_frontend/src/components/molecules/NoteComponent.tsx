@@ -20,7 +20,6 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
   value,
 }) => {
   const [noteDescription, updateNoteDescription] = useState(value);
-  // const [actualValue] = useState(value);
   const AUTOSAVE_INTERVAL = 3000;
 
   const handleChangeTextarea = ({

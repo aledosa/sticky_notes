@@ -67,6 +67,7 @@ export const HomeScreen: React.FC = () => {
   const noteContentLgWidth = withParentColumns(12);
   const noteContentMdWidth = withParentColumns(8);
   const noteContentSmWidth = withParentColumns(4);
+  console.log(notes);
 
   return (
     <Wrapper className="homeScreen-wrapper" css="width: auto;">
@@ -158,8 +159,9 @@ export const HomeScreen: React.FC = () => {
                   <NoteComponent
                     id={note._id}
                     key={`noteKey-${index}`}
-                    name={`noteName-${note.title}`}
-                    value={note.description}
+                    name={note.title}
+                    descriptionValue={note.description}
+                    titleValue={note.title}
                   />
                 </Column>
               ))}

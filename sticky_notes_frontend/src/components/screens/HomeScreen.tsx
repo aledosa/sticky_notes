@@ -8,6 +8,7 @@ import {
   H2,
   H3,
   H4,
+  LoadingSpinner,
   mediaQueries,
   Row,
   SvgSizes,
@@ -20,24 +21,19 @@ import { INoteList } from "../entities/PostList";
 
 export const HomeScreen: React.FC = () => {
   const [notes, updateNotes] = useState<INoteList[]>([]);
-  const [isNoteDeleted, updateIsNoteDeleted] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchNoteList = async () => {
       try {
-        updateIsNoteDeleted(false);
         const postListData = await fetch("/posts").then((res) => res.json());
         updateNotes(postListData);
-        if (isNoteDeleted) {
-          updateNotes(postListData);
-        }
       } catch (err) {
         console.log({ err: "error" });
       }
     };
 
     fetchNoteList();
-  }, [isNoteDeleted]);
+  }, []);
 
   const handleClickAddNote = () => {
     const post = {
@@ -54,7 +50,6 @@ export const HomeScreen: React.FC = () => {
             "Content-Type": "application/json",
           },
         }).then((res) => res.json());
-
         updateNotes([...notes, postListData]);
       } catch (err) {
         console.log({ err: "error" });
@@ -64,24 +59,9 @@ export const HomeScreen: React.FC = () => {
     sendPost();
   };
 
-  const handleDeleteNote = async (noteId: string) => {
-    try {
-      await fetch(`/posts/${noteId}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json());
-      updateIsNoteDeleted(true);
-    } catch (err) {
-      console.log({ err: "error" });
-    }
-  };
-
   const noteContentLgWidth = withParentColumns(12);
   const noteContentMdWidth = withParentColumns(8);
   const noteContentSmWidth = withParentColumns(4);
-  console.log(notes);
 
   return (
     <Wrapper className="homeScreen-wrapper" css="width: auto;">
@@ -161,25 +141,36 @@ export const HomeScreen: React.FC = () => {
                 }
               `}
             >
-              {notes.map((note, index) => (
-                <Column
-                  className="card-column"
-                  css="padding: 8px 0;"
-                  key={`noteColumn-${index}`}
-                  lg={noteContentLgWidth(3.5)}
-                  md={noteContentMdWidth(3.5)}
-                  sm={noteContentSmWidth(4)}
+              {notes.length === 0 ? (
+                <DivFlex
+                  alignItems="center"
+                  className="LoadingSpinner-div"
+                  height="319px"
+                  justifyContent="center"
+                  width="100%"
                 >
-                  <NoteComponent
-                    id={note._id}
-                    key={`noteKey-${index}`}
-                    name={note.title}
-                    descriptionValue={note.description}
-                    titleValue={note.title}
-                    onChangeNoteList={handleDeleteNote}
-                  />
-                </Column>
-              ))}
+                  <LoadingSpinner />
+                </DivFlex>
+              ) : (
+                notes.map((note, index) => (
+                  <Column
+                    className="card-column"
+                    css="padding: 8px 0;"
+                    key={`noteColumn-${index}`}
+                    lg={noteContentLgWidth(3.5)}
+                    md={noteContentMdWidth(3.5)}
+                    sm={noteContentSmWidth(4)}
+                  >
+                    <NoteComponent
+                      id={note._id}
+                      key={`noteKey-${index}`}
+                      name={note.title}
+                      descriptionValue={note.description}
+                      titleValue={note.title}
+                    />
+                  </Column>
+                ))
+              )}
             </Row>
           </Column>
         </DivFlex>

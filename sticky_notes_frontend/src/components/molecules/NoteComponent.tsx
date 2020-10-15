@@ -16,7 +16,6 @@ interface INoteComponentProps {
   titlePlaceholder?: string;
   descriptionValue: string;
   titleValue: string;
-  onChangeNoteList: (noteId: string) => void;
 }
 
 export const NoteComponent: React.FC<INoteComponentProps> = ({
@@ -26,26 +25,24 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
   titlePlaceholder = "Write a title",
   descriptionValue,
   titleValue,
-  onChangeNoteList,
 }) => {
   const [noteTitle, updateNoteTitle] = useState(titleValue);
   const [noteDescription, updateNoteDescription] = useState(descriptionValue);
+  const [hasNoteChanged, updateHasNoteChanged] = useState(false);
   const AUTOSAVE_INTERVAL = 3000;
 
   const handleChangeTitle = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateNoteTitle(value);
+    updateHasNoteChanged(true);
   };
 
   const handleChangeDescription = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateNoteDescription(value);
-  };
-
-  const handleNoteDeleted = () => {
-    onChangeNoteList(id);
+    updateHasNoteChanged(true);
   };
 
   useEffect(() => {
@@ -71,14 +68,43 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
     };
 
     const timer = setTimeout(() => {
-      if (noteDescription !== descriptionValue || noteTitle !== titleValue) {
+      if (
+        (noteDescription !== descriptionValue && hasNoteChanged) ||
+        (noteTitle !== titleValue && hasNoteChanged)
+      ) {
         handleUpdateNote(noteDescription, noteTitle);
         updateNoteTitle(noteTitle);
         updateNoteDescription(noteDescription);
+        updateHasNoteChanged(false);
       }
     }, AUTOSAVE_INTERVAL);
     return () => clearTimeout(timer);
-  }, [id, noteDescription, descriptionValue, noteTitle, titleValue]);
+  }, [
+    hasNoteChanged,
+    id,
+    noteDescription,
+    descriptionValue,
+    noteTitle,
+    titleValue,
+  ]);
+
+  const handleDeletedNote = () => {
+    const deleteNote = async () => {
+      try {
+        await fetch(`/posts/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => res.json());
+        window.location.reload();
+      } catch (err) {
+        console.log({ err: "error" });
+      }
+    };
+
+    deleteNote();
+  };
 
   return (
     <Card
@@ -135,7 +161,7 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
             }
           `}
           title="Delete note"
-          onClick={handleNoteDeleted}
+          onClick={handleDeletedNote}
         >
           <CloseIcon fill={colors.GRAY_500} />
         </ClickableElement>

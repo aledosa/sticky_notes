@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   colors,
@@ -20,31 +20,42 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
   value,
 }) => {
   const [noteDescription, updateNoteDescription] = useState(value);
+  // const [actualValue] = useState(value);
+  const AUTOSAVE_INTERVAL = 3000;
 
   const handleChangeTextarea = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateNoteDescription(value);
-    handleUpdateNote(value);
   };
 
-  const handleUpdateNote = async (noteText: string) => {
-    try {
-      const post = {
-        title: "",
-        description: noteText,
-      };
-      await fetch(`/posts/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(post),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }).then((res) => res.json());
-    } catch (err) {
-      console.log({ err: "error" });
-    }
-  };
+  useEffect(() => {
+    const handleUpdateNote = async (noteText: string) => {
+      try {
+        const post = {
+          title: "",
+          description: noteText,
+        };
+        await fetch(`/posts/${id}`, {
+          method: "PUT",
+          body: JSON.stringify(post),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then((res) => res.json());
+      } catch (err) {
+        console.log({ err: "error" });
+      }
+    };
+
+    const timer = setTimeout(() => {
+      if (noteDescription !== value) {
+        handleUpdateNote(noteDescription);
+        updateNoteDescription(noteDescription);
+      }
+    }, AUTOSAVE_INTERVAL);
+    return () => clearTimeout(timer);
+  }, [id, noteDescription, value]);
 
   return (
     <Card

@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
     const posts = await Post.find();
     res.status(200).json(posts);
   } catch (err) {
-    res.status(404).json({ message: err });
+    res.status(400).json({ message: err });
   }
 });
 
@@ -18,7 +18,7 @@ router.get("/:postId", async (req, res) => {
     const post = await Post.findById(req.params.postId);
     res.status(200).json(post);
   } catch (err) {
-    res.status(404).json({ message: err });
+    res.status(204).json({ message: err });
   }
 });
 
@@ -33,7 +33,7 @@ router.post("/", async (req, res) => {
     const savedPost = await post.save();
     res.status(200).json(savedPost);
   } catch (err) {
-    res.status(404).json({ message: err });
+    res.status(400).json({ message: err });
   }
 });
 
@@ -44,19 +44,19 @@ router.put("/:postId", async (req, res) => {
       { _id: req.params.postId },
       { $set: { title: req.body.title, description: req.body.description } }
     );
-    res.status(200).json(updatedPost);
+    res.status(201).json(updatedPost);
   } catch (err) {
-    res.status(404).json({ message: err });
+    res.status(400).json({ message: err });
   }
 });
 
 // Delete a post
 router.delete("/:postId", async (req, res) => {
   try {
-    const removedPost = await Post.remove({ _id: req.params.postId });
+    const removedPost = await Post.deleteOne({ _id: req.params.postId });
     res.status(200).json(removedPost);
   } catch (err) {
-    res.status(404).json({ message: err });
+    res.status(400).json({ message: err });
   }
 });
 

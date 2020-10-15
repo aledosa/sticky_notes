@@ -8,6 +8,7 @@ import {
   H2,
   H3,
   H4,
+  LoadingSpinner,
   mediaQueries,
   Row,
   SvgSizes,
@@ -20,23 +21,18 @@ import { INoteList } from "../entities/PostList";
 
 export const HomeScreen: React.FC = () => {
   const [notes, updateNotes] = useState<INoteList[]>([]);
-  // const isComponentUnmounted = useRef(false);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchNoteList = async () => {
       try {
         const postListData = await fetch("/posts").then((res) => res.json());
-        // if (!isComponentUnmounted.current) {
         updateNotes(postListData);
-        // }
       } catch (err) {
-        // if (!isComponentUnmounted.current) {
         console.log({ err: "error" });
-        // }
       }
     };
 
-    fetchPosts();
+    fetchNoteList();
   }, []);
 
   const handleClickAddNote = () => {
@@ -54,7 +50,6 @@ export const HomeScreen: React.FC = () => {
             "Content-Type": "application/json",
           },
         }).then((res) => res.json());
-
         updateNotes([...notes, postListData]);
       } catch (err) {
         console.log({ err: "error" });
@@ -86,7 +81,7 @@ export const HomeScreen: React.FC = () => {
             </DivFlex>
             <DivFlex alignContent="center" paddingBottom="24px">
               <H4 color={colors.GRAY_200} css="text-transform: none;">
-                To start writing and organizing your life click on the note
+                To start writing and organizing your life click on the left icon
                 below.
               </H4>
             </DivFlex>
@@ -146,23 +141,36 @@ export const HomeScreen: React.FC = () => {
                 }
               `}
             >
-              {notes.map((note, index) => (
-                <Column
-                  className="card-column"
-                  css="padding: 8px 0;"
-                  key={`noteColumn-${index}`}
-                  lg={noteContentLgWidth(3.5)}
-                  md={noteContentMdWidth(3.5)}
-                  sm={noteContentSmWidth(4)}
+              {notes.length === 0 ? (
+                <DivFlex
+                  alignItems="center"
+                  className="LoadingSpinner-div"
+                  height="319px"
+                  justifyContent="center"
+                  width="100%"
                 >
-                  <NoteComponent
-                    id={note._id}
-                    key={`noteKey-${index}`}
-                    name={`noteName-${note.title}`}
-                    value={note.description}
-                  />
-                </Column>
-              ))}
+                  <LoadingSpinner />
+                </DivFlex>
+              ) : (
+                notes.map((note, index) => (
+                  <Column
+                    className="card-column"
+                    css="padding: 8px 0;"
+                    key={`noteColumn-${index}`}
+                    lg={noteContentLgWidth(3.5)}
+                    md={noteContentMdWidth(3.5)}
+                    sm={noteContentSmWidth(4)}
+                  >
+                    <NoteComponent
+                      id={note._id}
+                      key={`noteKey-${index}`}
+                      name={note.title}
+                      descriptionValue={note.description}
+                      titleValue={note.title}
+                    />
+                  </Column>
+                ))
+              )}
             </Row>
           </Column>
         </DivFlex>

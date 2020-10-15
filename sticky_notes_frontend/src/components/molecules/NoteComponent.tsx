@@ -19,12 +19,31 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
   placeholder = "Insert text here",
   value,
 }) => {
-  const [noteText, updateNoteText] = useState(value);
+  const [noteDescription, updateNoteDescription] = useState(value);
 
   const handleChangeTextarea = ({
     target: { value },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
-    updateNoteText(value);
+    updateNoteDescription(value);
+    handleUpdateNote(value);
+  };
+
+  const handleUpdateNote = async (noteText: string) => {
+    try {
+      const post = {
+        title: "",
+        description: noteText,
+      };
+      await fetch(`/posts/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(post),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((res) => res.json());
+    } catch (err) {
+      console.log({ err: "error" });
+    }
   };
 
   return (
@@ -48,7 +67,7 @@ export const NoteComponent: React.FC<INoteComponentProps> = ({
           id={id}
           name={name}
           placeholder={placeholder}
-          value={noteText}
+          value={noteDescription}
           onChange={handleChangeTextarea}
         />
       </DivFlex>

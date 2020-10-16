@@ -4,6 +4,8 @@ RUN mkdir -p /usr/src/app-backend
 
 WORKDIR /usr/src/app-backend
 
+EXPOSE 3001
+
 COPY package.json /usr/src/app-backend
 COPY package-lock.json /usr/src/app-backend
 

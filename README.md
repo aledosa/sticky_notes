@@ -1,7 +1,5 @@
 # Sticky Notes Application
 
-## Description:
-
 This web app integrates a React.js as frontend and Express.js framework with a MongoDB database as backend.
 
 Sticky Notes was build as a Responsive Single Page Application so it manages desktop, tablet and mobile widths and it can be easy to scaled it.

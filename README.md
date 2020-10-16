@@ -26,7 +26,7 @@ DevOps: Docker-compose.
 
 Pretty much everything you need to install after cloning repository are the technology stack mentioned before, and all aplication runs on root folder `sticky_notes` by typing the command `docker-compose up`.
 
-To run the app you have to install docker in your computer also and build the images first by typing the command `docker-composeup --build`. Or if you dont want to do this you can run the entire app by installing Concurrently and editing the sticky_notes_backend package.json like this on the script section:
+To run the app you have to install docker in your computer also and build the images first by typing the command `docker-compose up --build`. Or if you dont want to do this you can run the entire app by installing Concurrently and editing the sticky_notes_backend package.json like this on the script section:
 
 `... { "scripts": { "dev": "nodemon app.js", "client": "cd .. && cd sticky_notes_frontend && yarn start", "start": "concurrently \"npm run dev\" \"npm run client\"" }, ...`
 

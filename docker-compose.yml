@@ -2,8 +2,11 @@ version: "3"
 services:
   # Setup frontend/client container
   frontend:
+    stdin_open: true
     container_name: sticky_notes_web
-    build: ./sticky_notes_frontend
+    build:
+      context: ./sticky_notes_frontend
+      dockerfile: Dockerfile
     environment:
       - CLIENT_APP_PORT=${CLIENT_APP_PORT}
     expose:

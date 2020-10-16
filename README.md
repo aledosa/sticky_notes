@@ -33,6 +33,7 @@ To run the app you have to install docker in your computer also and build the im
 And like this on the sticky_notes_frontend package.json:
 
 `... "name": "sticky_notes_frontend", "version": "0.1.0", "private": true, "proxy": "http://localhost:3001", "dependencies": { ...`
+
 Therefore you can run the entire app by getting into sticky_notes_backend folder and typing the command `npm start`.
 
 ## Also:

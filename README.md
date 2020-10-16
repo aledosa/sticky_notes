@@ -35,7 +35,7 @@ And like this on the sticky_notes_frontend package.json:
 `... "name": "sticky_notes_frontend", "version": "0.1.0", "private": true, "proxy": "http://localhost:3001", "dependencies": { ...`
 Therefore you can run the entire app by getting into sticky_notes_backend folder and typing the command `npm start`.
 
-## Also
+## Also:
 
 There's a version of this same app using Concurrently by Node.js that I have with me, so for any doubts or information, contact me.
 

@@ -22,16 +22,27 @@ Backend: Express, nodemon, Mongoose, body-parser, dotenv and MongoDB. Used NPM a
 
 DevOps: Docker-compose.
 
-## Installation:
+## Installation and running:
 
-Pretty much everything you need to install after cloning repository are the technology stack mentioned before, and all aplication runs on root folder `sticky_notes` by typing `docker-compose-up`.
+Pretty much everything you need to install after cloning repository are the technology stack mentioned before, and all aplication runs on root folder `sticky_notes` by typing the command `docker-compose up`.
+
+To run the app you have to install docker in your computer also and build the images first by typing the command `docker-composeup --build`. Or if you dont want to do this you can run the entire app by installing Concurrently and editing the sticky_notes_backend package.json like this on the script section:
+
+`... { "scripts": { "dev": "nodemon app.js", "client": "cd .. && cd sticky_notes_frontend && yarn start", "start": "concurrently \"npm run dev\" \"npm run client\"" }, ...`
+
+And like this on the sticky_notes_frontend package.json:
+
+`... "name": "sticky_notes_frontend", "version": "0.1.0", "private": true, "proxy": "http://localhost:3001", "dependencies": { ...`
+Therefore you can run the entire app by getting into sticky_notes_backend folder and typing the command `npm start`.
+
+## Also
+
+There's a version of this same app using Concurrently by Node.js that I have with me, so for any doubts or information, contact me.
 
 To get separate parts of the project as the frontend and backend you can find them on my github repository page under the following names:
 
 - Frontend: sticky_notes_app (older version that what appears in this app)
 - Backend: be_test (similar version of what appears in this app)
-
-Also there's a version of this same app using Concurrently by Node.js that I have with me, so for any doubts or information, contact me.
 
 <pr/>
 Regards,
